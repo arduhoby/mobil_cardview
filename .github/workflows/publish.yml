@@ -1,0 +1,38 @@
+name: Publish Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Yapılandırılabilir bit
+        run: chmod +x gradlew
+
+      - name: Kütüphaneleri derle
+        run: ./gradlew :rolodex:assembleRelease :glasscard:assembleRelease
+
+      - name: GitHub Packages'e yayınla
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ./gradlew :rolodex:publishReleasePublicationToGitHubPackagesRepository \
+            :glasscard:publishReleasePublicationToGitHubPackagesRepository \
+            -PpkVersion="$VERSION"

@@ -51,7 +51,7 @@ publishing {
             register<MavenPublication>("release") {
                 groupId = "com.kartview"
                 artifactId = "rolodex"
-                version = "0.1.0"
+                version = providers.gradleProperty("pkVersion").getOrElse("0.1.0")
                 from(components["release"])
             }
         }
