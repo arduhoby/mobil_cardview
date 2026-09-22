@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Ortak Glass CardView design token şeması. Android (Compose) ve iOS (SwiftUI) tarafı bu token'ları kendi native tema sistemine map'ler. Değerler UI birimi dp cinsindendir (renkler ARGB hex).",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "card": {
+      "type": "object",
+      "properties": {
+        "cornerRadius": { "type": "number", "minimum": 0, "default": 20, "description": "Köşe yarıçapı (dp)." },
+        "backgroundColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$", "default": "#B3FFFFFF", "description": "Yüzey taban rengi (ARGB)." },
+        "backgroundOpacity": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.52, "description": "Yüzey opaklık çarpanı. Düşürüldükçe arkadaki bulanık duvar kâğıdı (cam) kendini gösterir." },
+        "blurIntensity": { "type": "number", "minimum": 0, "default": 25, "description": "Backdrop blur yarıçapı (dp). Sadece API 31+ cihazlarda aktiftir; altında fallback kullanılır. 0 = blur kapalı." },
+        "gradientEnabled": { "type": "boolean", "default": true, "description": "Üst-alt cam gradient'i." },
+        "gradientInsetColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$", "default": "#33FFFFFF", "description": "Üst kenardaki parlak gradient rengi." },
+        "borderWidth": { "type": "number", "minimum": 0, "default": 1, "description": "Ince parlak border kalınlığı (dp)." },
+        "borderColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$", "default": "#59FFFFFF", "description": "Border rengi." },
+        "shadowEnabled": { "type": "boolean", "default": true },
+        "shadowColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$", "default": "#40000000" },
+        "shadowElevation": { "type": "number", "default": 14, "description": "Gölge yüksekliği (dp)." },
+        "bombe": {
+          "type": "object",
+          "description": "Bombeli (convex) cam hissi: kenar karartması + üst kenar parlaması + köşe ışık noktaları + 3B bevel kenar ve alt yansıma.",
+          "properties": {
+            "rimShadowAlpha": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.30, "description": "Dış kenarı karanlığa sürükleyen convex gölge şiddeti." },
+            "topGlossAlpha": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.55, "description": "Üst kenarı takip eden ince cam parlaması." },
+            "cornerGlintAlpha": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.46, "description": "Üst köşelerdeki kubbe ışık noktaları." },
+            "domeAlpha": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.38, "description": "Merkez kubbe parlaması." },
+            "bevelEdgeAlpha": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.70, "description": "Sol-üst parlak + sağ-alt karanlık 3B kenar (cam kalınlığı hissi)." },
+            "bottomBounceAlpha": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.45, "description": "Alt kenar iç yansıması (zeminden gelen ışık)." }
+          }
+        }
+      }
+    },
+    "stripe": {
+      "type": "object",
+      "description": "Renk manşeti (accent stripe). Veri tipini/kategorisini belirtir.",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "position": { "type": "string", "enum": ["top", "bottom", "left", "right"], "default": "left" },
+        "thickness": { "type": "number", "minimum": 0, "default": 3, "description": "Şerit kalınlığı (dp)." },
+        "colorMode": { "type": "string", "enum": ["global", "perDataType"], "default": "perDataType", "description": "global: tek renk her kartta; perDataType: şerit rengi veri tipinden gelir." },
+        "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$", "default": "#FF3B82F6", "description": "global modu varsayılan rengi." },
+        "presetColors": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{8}$" },
+          "default": ["#FF3B82F6", "#FFFF9800", "#FF4CAF50", "#FF9C27B0", "#FFFF5252", "#FF00BCD4", "#FFFFC107", "#FF8D6E63"]
+        }
+      }
+    },
+    "dismiss": {
+      "type": "object",
+      "description": "Kaydırma ile kapatma animasyonu (iOS kilit ekranı bildirim tarzı).",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "direction": { "type": "string", "enum": ["up", "down", "both"], "default": "both", "description": "Sürükleme yön kısıtı. Çıkış yönü her zaman sağa." },
+        "thresholdRatio": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.2, "description": "Eşik: dikey sürüklemenin kart yüksekliğine oranı." },
+        "duration": { "type": "number", "default": 450, "description": "Spring animasyon süresi (ms)." },
+        "springStiffness": { "type": "number", "default": 0.4, "description": "Spring sertliği." },
+        "maxScaleDown": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.85, "description": "Maksimum küçülme oranı." },
+        "exitTranslateX": { "type": "number", "default": 1.2, "description": "Ekran genişliğine oranla sağa çıkış mesafesi." }
+      }
+    }
+  },
+  "required": ["version", "card", "stripe"]
+}
